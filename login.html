@@ -1,0 +1,28 @@
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Kontrollzentrum</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="cosmic-background"></div>
+    <div class="container">
+        <div class="login-container">
+            <h1>Admin-Authentifizierung</h1>
+            <p>Bitte gib deine Kredentialien ein, um auf das Verwaltungsdeck zuzugreifen.</p>
+            <form id="login-form">
+                <input type="text" id="username" class="control-element" placeholder="Benutzername" required>
+                <input type="password" id="password" class="control-element" placeholder="Passwort" required>
+                <button type="submit" class="cta-button">System entschlüsseln</button>
+            </form>
+            <p id="error-message" class="error-message"></p>
+            <a href="index.html" class="back-link">&laquo; Zurück zur Hauptansicht</a>
+        </div>
+    </div>
+    <script src="auth.js"></script>
+</body>
+</html>

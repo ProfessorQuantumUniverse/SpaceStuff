@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin-Dashboard wird geladen...</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="cosmic-background"></div>
+    <div class="container">
+        <div class="loading-indicator" style="text-align: center; margin-top: 5rem;">
+            <h2><span class="glitch" data-text="Entschlüssle Admin-Modul...">Entschlüssle Admin-Modul...</span></h2>
+            <p id="decrypt-status"></p>
+        </div>
+    </div>
+
+    <script>
+        // Diese Funktion wird den entschlüsselten HTML-Code in die Seite schreiben
+        // und dabei auch die enthaltenen Skripte (wie admin.js) ausführen.
+        function renderDecryptedPage(htmlContent) {
+            document.open();
+            document.write(htmlContent);
+            document.close();
+        }
+
+        async function decryptAndLoad() {
+            const status = document.getElementById('decrypt-status');
+            const username = sessionStorage.getItem('crypto-user');
+            const password = sessionStorage.getItem('crypto-pass');
+            
+            // Wenn keine Kredentialien vorhanden sind, zurück zum Login
+            if (!username || !password) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                status.textContent = "Lade verschlüsselte Daten...";
+                const response = await fetch('admin.dat'); // Lade die verschlüsselte Datei
+                if (!response.ok) throw new Error("Verschlüsselte Datei 'admin.dat' nicht gefunden.");
+                
+                const encryptedDataB64 = await response.text();
+                const combined = new Uint8Array(atob(encryptedDataB64).split('').map(char => char.charCodeAt(0)));
+
+                const salt = combined.slice(0, 16);
+                const iv = combined.slice(16, 28); // 16 + 12
+                const encrypted = combined.slice(28);
+
+                status.textContent = "Generiere Entschlüsselungscode...";
+                const keyMaterial = await crypto.subtle.importKey(
+                    "raw",
+                    new TextEncoder().encode(password + username),
+                    { name: "PBKDF2" },
+                    false,
+                    ["deriveKey"]
+                );
+
+                const key = await crypto.subtle.deriveKey(
+                    { "name": "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+                    keyMaterial,
+                    { "name": "AES-GCM", "length": 256 },
+                    true,
+                    [ "encrypt", "decrypt" ]
+                );
+
+                status.textContent = "Entschlüssle Daten...";
+                const decrypted = await crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv: iv },
+                    key,
+                    encrypted
+                );
+                
+                status.textContent = "Lade Admin-Oberfläche...";
+                const decryptedHtml = new TextDecoder().decode(decrypted);
+                
+                // Wichtig: Kredentialien entfernen, nachdem sie verwendet wurden
+                sessionStorage.removeItem('crypto-user');
+                sessionStorage.removeItem('crypto-pass');
+                
+                renderDecryptedPage(decryptedHtml);
+
+            } catch (err) {
+                console.error("Entschlüsselung fehlgeschlagen:", err);
+                status.innerHTML = `Entschlüsselung fehlgeschlagen. Wahrscheinlich falscher Benutzername/Passwort. <a href="login.html">Erneut versuchen</a>.`;
+                sessionStorage.clear();
+            }
+        }
+
+        decryptAndLoad();
+    </script>
+</body>
+</html>

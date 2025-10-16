@@ -1,0 +1,285 @@
+/* Globale Stile und Variablen */
+:root {
+    --primary-font: 'Orbitron', sans-serif;
+    --secondary-font: 'Share Tech Mono', monospace;
+    --text-color: #e0e6f1;
+    --accent-color: #00dffc; /* Cyan */
+    --background-color: #0c0a18;
+    --card-background: rgba(28, 25, 52, 0.6);
+    --border-color: rgba(0, 223, 252, 0.4);
+    --shadow-color: rgba(0, 223, 252, 0.5);
+    --danger-color: #ff4d4d;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--secondary-font);
+    margin: 0;
+    line-height: 1.6;
+}
+
+#cosmic-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    overflow: hidden;
+}
+
+/* Container und Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInDown 1s ease-out;
+}
+
+header h1 {
+    font-family: var(--primary-font);
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    text-shadow: 0 0 10px var(--shadow-color);
+    letter-spacing: 2px;
+}
+
+/* Buttons und Steuerelemente */
+.cta-button, .control-element {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--accent-color);
+    padding: 12px 20px;
+    font-family: var(--secondary-font);
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    margin: 5px;
+}
+
+.cta-button:hover, .control-element:hover {
+    background-color: rgba(0, 223, 252, 0.1);
+    box-shadow: 0 0 15px var(--shadow-color);
+}
+
+.cta-button.danger {
+    color: var(--danger-color);
+    border-color: rgba(255, 77, 77, 0.4);
+}
+
+.cta-button.danger:hover {
+    background-color: rgba(255, 77, 77, 0.1);
+    box-shadow: 0 0 15px rgba(255, 77, 77, 0.5);
+}
+
+.cta-button.neutral {
+    color: #aaa;
+    border-color: rgba(170, 170, 170, 0.4);
+}
+.cta-button.neutral:hover {
+     background-color: rgba(170, 170, 170, 0.1);
+     box-shadow: 0 0 15px rgba(170, 170, 170, 0.5);
+}
+
+input, textarea, select {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+/* Wunschlisten-Anzeige */
+.wishlist {
+    margin-bottom: 3rem;
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    background: var(--card-background);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    animation: fadeInUp 1s ease-out;
+}
+
+.wishlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.wishlist-header h2 {
+    font-family: var(--primary-font);
+    color: var(--text-color);
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.wishlist-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.wish-card {
+    background: rgba(40, 37, 78, 0.7);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.wish-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px var(--shadow-color);
+}
+
+.wish-card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background-color: #1c1934;
+}
+
+.wish-card-content {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.wish-card h3 {
+    font-family: var(--primary-font);
+    margin: 0 0 0.5rem 0;
+    color: var(--accent-color);
+}
+
+.wish-card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    color: #a9a9a9;
+}
+
+.priority-5 { color: #ff4d4d; font-weight: bold; }
+.priority-4 { color: #ff9a4d; }
+.priority-3 { color: #e8d655; }
+.priority-2 { color: #55d6e8; }
+.priority-1 { color: #a9a9a9; }
+
+.wish-card-description {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+}
+
+.wish-card-footer {
+    margin-top: auto;
+}
+
+/* Login-Seite */
+.login-container {
+    max-width: 500px;
+    margin: 5rem auto;
+    text-align: center;
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    background: var(--card-background);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+}
+
+.error-message {
+    color: var(--danger-color);
+    margin-top: 1rem;
+    min-height: 1.2em;
+}
+
+/* Admin-Seite */
+.admin-section {
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    background: var(--card-background);
+    border-radius: 8px;
+}
+
+.admin-section h2 {
+    font-family: var(--primary-font);
+    color: var(--accent-color);
+}
+
+#wish-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.admin-wish-list .wish-card {
+    cursor: pointer;
+}
+
+/* Animationen */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.glitch {
+    position: relative;
+    color: var(--accent-color);
+}
+.glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background-color);
+    overflow: hidden;
+}
+.glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--danger-color);
+    animation: glitch-anim-1 2s infinite linear alternate-reverse;
+}
+.glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 var(--accent-color);
+    animation: glitch-anim-2 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+    0% { clip: rect(42px, 9999px, 44px, 0); }
+    100% { clip: rect(90px, 9999px, 92px, 0); }
+}
+@keyframes glitch-anim-2 {
+    0% { clip: rect(12px, 9999px, 14px, 0); }
+    100% { clip: rect(67px, 9999px, 69px, 0); }
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    #wish-form {
+        grid-template-columns: 1fr 1fr;
+    }
+    #wish-form textarea, #wish-form button {
+        grid-column: span 2;
+    }
+}
