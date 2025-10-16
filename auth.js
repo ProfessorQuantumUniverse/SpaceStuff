@@ -13,7 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.setItem('crypto-user', username);
         sessionStorage.setItem('crypto-pass', password);
 
-        // 3. Leite den Benutzer zur "Shell"-Seite weiter, die den Entschlüsselungsversuch startet.
+        // 3. Markiere Session als authentifiziert, damit das Admin-Skript nicht umleitet.
+        sessionStorage.setItem('auth-token', 'granted');
+
+        // 4. Leite den Benutzer zur "Shell"-Seite weiter, die den Entschlüsselungsversuch startet.
         window.location.href = 'admin_shell.html';
     });
 });

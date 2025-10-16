@@ -20,22 +20,50 @@
         // Muss mit script.js übereinstimmen
         window.API_URL = 'https://script.google.com/macros/s/AKfycbxbc7A9oylZl1JDa-Lh7TrD819D1_x0Jh9O18jwowc35iGhJ-Tv6loGHBXdhMyS-v55Uw/exec';
 
-        // Diese Funktion rendert den HTML-Teil und führt das Skript korrekt aus.
-        function renderDecryptedPage(htmlContent) {
+        // Führt ALLE Skripte aus der entschlüsselten Seite in richtiger Reihenfolge aus.
+        async function renderDecryptedPage(htmlContent) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlContent, 'text/html');
 
-            // 1. Übertrage den Body-Inhalt der entschlüsselten Seite
+            // 1) Ersetze den Body-Inhalt der entschlüsselten Seite (dies entfernt ursprüngliche <script>-Tags im DOM)
             document.body.innerHTML = doc.body.innerHTML;
 
-            // 2. Extrahiere das Skript
-            const scriptTag = doc.querySelector('script');
-            if (scriptTag) {
-                const script = document.createElement('script');
-                // 3. Verpacke den gesamten Skriptinhalt in eine sofort ausgeführte async-Funktion.
-                //    Dies löst das Top-Level-Await-Problem, ohne den Scope zu brechen.
-                script.textContent = `(async () => { ${scriptTag.textContent} })();`;
-                document.body.appendChild(script);
+            // 2) Sammle alle Skripte aus der entschlüsselten Seite
+            const scripts = Array.from(doc.querySelectorAll('script'));
+
+            // 3) Führe Skripte nacheinander aus, um die Reihenfolge zu erhalten
+            for (const oldScript of scripts) {
+                const newScript = document.createElement('script');
+
+                // Kopiere Typ, falls gesetzt (z. B. type="module")
+                if (oldScript.type) {
+                    newScript.type = oldScript.type;
+                }
+
+                // Externe Skripte: lade und warte, dann erst nächstes Script
+                if (oldScript.src) {
+                    newScript.src = oldScript.src;
+                    // async/defer explizit deaktivieren, um Reihenfolge zu garantieren
+                    newScript.async = false;
+                    await new Promise((resolve, reject) => {
+                        newScript.onload = resolve;
+                        newScript.onerror = reject;
+                        document.body.appendChild(newScript);
+                    });
+                } else {
+                    // Inline-Skripte:
+                    // - Für Module: unverändert einsetzen (unterstützt Top-Level await nativ)
+                    // - Für normale Skripte: in async IIFE wrappen, um Top-Level await zu ermöglichen,
+                    //   ohne den globalen Scope zu "verschmutzen".
+                    const content = oldScript.textContent || '';
+                    if (newScript.type === 'module') {
+                        newScript.textContent = content;
+                    } else {
+                        newScript.textContent = `(async () => { ${content} })();`;
+                    }
+                    document.body.appendChild(newScript);
+                    // Inline-Skripte laufen synchron, kein explizites Warten notwendig
+                }
             }
         }
 
@@ -43,7 +71,7 @@
             const status = document.getElementById('decrypt-status');
             const username = sessionStorage.getItem('crypto-user');
             const password = sessionStorage.getItem('crypto-pass');
-            
+
             if (!username || !password) {
                 window.location.href = 'login.html';
                 return;
@@ -53,7 +81,7 @@
                 status.textContent = "Lade verschlüsselte Daten...";
                 const response = await fetch('admin.dat');
                 if (!response.ok) throw new Error("Verschlüsselte Datei 'admin.dat' nicht gefunden.");
-                
+
                 const encryptedDataB64 = await response.text();
                 const combined = new Uint8Array(atob(encryptedDataB64).split('').map(char => char.charCodeAt(0)));
 
@@ -71,11 +99,11 @@
                 );
 
                 const key = await crypto.subtle.deriveKey(
-                    { "name": "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+                    { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
                     keyMaterial,
-                    { "name": "AES-GCM", "length": 256 },
+                    { name: "AES-GCM", length: 256 },
                     true,
-                    [ "encrypt", "decrypt" ]
+                    ["encrypt", "decrypt"]
                 );
 
                 status.textContent = "Entschlüssle Daten...";
@@ -84,15 +112,15 @@
                     key,
                     encrypted
                 );
-                
+
                 status.textContent = "Lade Admin-Oberfläche...";
                 const decryptedHtml = new TextDecoder().decode(decrypted);
-                
+
+                // Sicherheit: Entferne die Entschlüsselungsdaten aus der Session
                 sessionStorage.removeItem('crypto-user');
                 sessionStorage.removeItem('crypto-pass');
-                
-                renderDecryptedPage(decryptedHtml);
 
+                await renderDecryptedPage(decryptedHtml);
             } catch (err) {
                 console.error("Entschlüsselung fehlgeschlagen:", err);
                 status.innerHTML = `Entschlüsselung fehlgeschlagen. Wahrscheinlich falscher Benutzername/Passwort. <a href="login.html">Erneut versuchen</a>.`;
