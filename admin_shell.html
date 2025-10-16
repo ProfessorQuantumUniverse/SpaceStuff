@@ -16,12 +16,22 @@
     </div>
 
     <script>
-        // Diese Funktion wird den entschlüsselten HTML-Code in die Seite schreiben
-        // und dabei auch die enthaltenen Skripte (wie admin.js) ausführen.
+        // Diese Funktion rendert den HTML-Teil und fügt das Skript dynamisch hinzu.
         function renderDecryptedPage(htmlContent) {
-            document.open();
-            document.write(htmlContent);
-            document.close();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlContent, 'text/html');
+
+            // 1. Übertrage den Body-Inhalt der entschlüsselten Seite
+            document.body.innerHTML = doc.body.innerHTML;
+
+            // 2. Extrahiere und füge das Skript als Modul hinzu, damit Top-Level-Await funktioniert
+            const scriptTag = doc.querySelector('script');
+            if (scriptTag) {
+                const script = document.createElement('script');
+                script.type = 'module'; // Wichtig: Als Modul ausführen!
+                script.textContent = scriptTag.textContent;
+                document.body.appendChild(script);
+            }
         }
 
         async function decryptAndLoad() {
