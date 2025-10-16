@@ -16,7 +16,7 @@
     </div>
 
     <script>
-        // Diese Funktion rendert den HTML-Teil und fügt das Skript dynamisch hinzu.
+        // Diese Funktion rendert den HTML-Teil und führt das Skript korrekt aus.
         function renderDecryptedPage(htmlContent) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlContent, 'text/html');
@@ -24,12 +24,13 @@
             // 1. Übertrage den Body-Inhalt der entschlüsselten Seite
             document.body.innerHTML = doc.body.innerHTML;
 
-            // 2. Extrahiere und füge das Skript als Modul hinzu, damit Top-Level-Await funktioniert
+            // 2. Extrahiere das Skript
             const scriptTag = doc.querySelector('script');
             if (scriptTag) {
                 const script = document.createElement('script');
-                script.type = 'module'; // Wichtig: Als Modul ausführen!
-                script.textContent = scriptTag.textContent;
+                // 3. Verpacke den gesamten Skriptinhalt in eine sofort ausgeführte async-Funktion.
+                //    Dies löst das Top-Level-Await-Problem, ohne den Scope zu brechen.
+                script.textContent = `(async () => { ${scriptTag.textContent} })();`;
                 document.body.appendChild(script);
             }
         }
@@ -39,7 +40,6 @@
             const username = sessionStorage.getItem('crypto-user');
             const password = sessionStorage.getItem('crypto-pass');
             
-            // Wenn keine Kredentialien vorhanden sind, zurück zum Login
             if (!username || !password) {
                 window.location.href = 'login.html';
                 return;
@@ -47,14 +47,14 @@
 
             try {
                 status.textContent = "Lade verschlüsselte Daten...";
-                const response = await fetch('admin.dat'); // Lade die verschlüsselte Datei
+                const response = await fetch('admin.dat');
                 if (!response.ok) throw new Error("Verschlüsselte Datei 'admin.dat' nicht gefunden.");
                 
                 const encryptedDataB64 = await response.text();
                 const combined = new Uint8Array(atob(encryptedDataB64).split('').map(char => char.charCodeAt(0)));
 
                 const salt = combined.slice(0, 16);
-                const iv = combined.slice(16, 28); // 16 + 12
+                const iv = combined.slice(16, 28);
                 const encrypted = combined.slice(28);
 
                 status.textContent = "Generiere Entschlüsselungscode...";
@@ -84,7 +84,6 @@
                 status.textContent = "Lade Admin-Oberfläche...";
                 const decryptedHtml = new TextDecoder().decode(decrypted);
                 
-                // Wichtig: Kredentialien entfernen, nachdem sie verwendet wurden
                 sessionStorage.removeItem('crypto-user');
                 sessionStorage.removeItem('crypto-pass');
                 
