@@ -251,7 +251,10 @@ header p {
 }
 
 /* Forms */
-input, textarea, select {
+/* WICHTIG: Checkboxen/Radio sind ausgenommen, damit sie nicht wie Textfelder aussehen */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+textarea,
+select {
     width: 100%;
     font-size: 1rem;
     border-radius: 10px;
@@ -265,6 +268,13 @@ input::placeholder, textarea::placeholder { color: #8aa1b8; }
 input:focus, textarea:focus, select:focus {
     background: rgba(0, 223, 252, 0.07);
     border-color: rgba(0, 223, 252, 0.55);
+}
+/* Saubere Checkboxen/Radios für Modal */
+input[type="checkbox"], input[type="radio"] {
+    width: auto; height: auto;
+    padding: 0; margin: 0 .5rem 0 0;
+    border: none; background: transparent;
+    accent-color: var(--accent-color);
 }
 
 /* ---------- Controls Bar ---------- */
@@ -339,7 +349,7 @@ input:focus, textarea:focus, select:focus {
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     overflow: hidden;
-    transition: transform var(--base) var(--spring),
+    transition: transform var(--base) var(--ease-out),
                 box-shadow var(--base) var(--ease-out),
                 filter var(--base) var(--ease-out);
     will-change: transform;
@@ -612,9 +622,12 @@ footer { text-align: center; opacity: .8; margin-top: 1.5rem; }
     display: flex; align-items: center; justify-content: center;
     padding: 1rem;
 }
+.modal[hidden] { display: none !important; }
 .modal.hidden { display: none; }
 .modal-content {
     width: min(900px, 96vw);
+    max-height: 90vh; /* Popup bleibt im Viewport */
+    overflow: auto;
     background: var(--glass-bg);
     border: 1px solid var(--glass-stroke);
     border-radius: var(--radius);
@@ -635,6 +648,7 @@ footer { text-align: center; opacity: .8; margin-top: 1.5rem; }
 .modal-grid {
     display: grid; gap: 1rem;
     grid-template-columns: 1fr;
+    align-items: start;
 }
 @media (min-width: 680px) {
     .modal-grid { grid-template-columns: 1.4fr .8fr; }
@@ -650,7 +664,7 @@ footer { text-align: center; opacity: .8; margin-top: 1.5rem; }
     padding: .5rem;
     min-height: 240px;
 }
-.qr-box img { max-width: 100%; height: auto; display: block; }
+.qr-box img { width: 220px; height: 220px; object-fit: contain; display: block; }
 .muted { color: var(--muted-text); }
 
 /* Place share button container nicely */

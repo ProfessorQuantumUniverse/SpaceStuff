@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Falls sort= über URL ankommt, im UI spiegeln
     const sortOptions = new Set(['default','priority-desc','priority-asc','price-desc','price-asc']);
-    if (sortOptions.has(urlSort)) {
+    if (sortOptions.has(urlSort) && sortFilter) {
         sortFilter.value = urlSort;
     }
 
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Sortier-UI
-    sortFilter.addEventListener('change', (e) => {
+    sortFilter?.addEventListener('change', (e) => {
         const criteria = e.target.value;
         const opts = {
             hideFulfilled: params.get('hideFulfilled') === '1',
@@ -198,11 +198,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateSharePreview();
         shareModal.classList.remove('hidden');
+        shareModal.removeAttribute('hidden'); // garantiert sichtbar
         document.body.style.overflow = 'hidden';
     }
 
     function closeShareModal() {
         shareModal.classList.add('hidden');
+        shareModal.setAttribute('hidden', ''); // garantiert verborgen
         document.body.style.overflow = '';
     }
 
@@ -244,8 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selSort && selSort !== 'default') u.searchParams.set('sort', selSort);
         else u.searchParams.delete('sort');
 
-        u.searchParams.toggle?.('hideFulfilled', shareHideFulfilled.checked); // Safari hat toggle nicht
-        // Fallback:
+        // Setze/entferne Flags kompatibel
         setFlag(u, 'hideFulfilled', shareHideFulfilled.checked);
         setFlag(u, 'hidePrice', shareHidePrice.checked);
         setFlag(u, 'hideDesc', shareHideDesc.checked);
@@ -253,9 +254,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalUrl = u.toString();
         shareLinkInput.value = finalUrl;
 
-        // QR-Code über externen Generator (leichtgewichtig)
-        const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(finalUrl);
-        shareQrImg.src = qrUrl;
+        // QR-Code
+        if (shareQrImg) {
+            const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(finalUrl);
+            shareQrImg.src = qrUrl;
+        }
     }
 
     function setFlag(urlObj, key, on) {
