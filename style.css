@@ -604,3 +604,70 @@ footer { text-align: center; opacity: .8; margin-top: 1.5rem; }
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
 }
+
+/* ---------- Share Modal ---------- */
+.modal {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.55);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+}
+.modal.hidden { display: none; }
+.modal-content {
+    width: min(900px, 96vw);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-stroke);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 22px rgba(0, 223, 252, 0.12);
+    backdrop-filter: blur(var(--blur-level));
+    animation: fadeInUp var(--slow) var(--ease-out);
+}
+.modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .8rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.modal-header h3 { margin: 0; font-family: var(--primary-font); color: var(--accent-color); }
+.modal-close {
+    background: transparent; border: none; color: var(--text-color);
+    font-size: 1.5rem; cursor: pointer; line-height: 1;
+}
+.modal-body { padding: 1rem; }
+.modal-grid {
+    display: grid; gap: 1rem;
+    grid-template-columns: 1fr;
+}
+@media (min-width: 680px) {
+    .modal-grid { grid-template-columns: 1.4fr .8fr; }
+}
+.modal-label { display: block; margin-bottom: .6rem; }
+.modal-checkbox { display: flex; align-items: center; gap: .5rem; margin: .4rem 0; }
+.modal-actions { display: flex; gap: .5rem; margin-top: .5rem; flex-wrap: wrap; }
+.qr-box {
+    display: grid; place-items: center;
+    border: 1px dashed rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.02);
+    border-radius: var(--radius);
+    padding: .5rem;
+    min-height: 240px;
+}
+.qr-box img { max-width: 100%; height: auto; display: block; }
+.muted { color: var(--muted-text); }
+
+/* Place share button container nicely */
+.wishlist-actions { display: flex; gap: .5rem; }
+
+/* ---------- Toast ---------- */
+.toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,223,252,0.12);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: .6rem 1rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35), 0 0 16px rgba(0,223,252,0.18);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+}
+.toast.error { background: rgba(255,77,77,0.12); border-color: rgba(255,77,77,0.45); }
+.toast.hidden { display: none; }
+/* ---------- End of style.css ---------- */

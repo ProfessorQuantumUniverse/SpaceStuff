@@ -41,6 +41,61 @@
         </footer>
     </div>
 
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="share-modal-title">Liste teilen</h3>
+                <button class="modal-close" id="share-modal-close" aria-label="Schließen">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-grid">
+                    <div>
+                        <label class="modal-label">
+                            Sortierung
+                            <select id="share-sort" class="control-element">
+                                <option value="default">Standard</option>
+                                <option value="priority-desc">Priorität (Höchste zuerst)</option>
+                                <option value="priority-asc">Priorität (Niedrigste zuerst)</option>
+                                <option value="price-desc">Preis (Teuerste zuerst)</option>
+                                <option value="price-asc">Preis (Günstigste zuerst)</option>
+                            </select>
+                        </label>
+                        <label class="modal-checkbox">
+                            <input type="checkbox" id="share-hide-fulfilled">
+                            Erfüllte Wünsche ausblenden
+                        </label>
+                        <label class="modal-checkbox">
+                            <input type="checkbox" id="share-hide-price">
+                            Preise ausblenden
+                        </label>
+                        <label class="modal-checkbox">
+                            <input type="checkbox" id="share-hide-desc">
+                            Beschreibung ausblenden
+                        </label>
+                        <label class="modal-label">
+                            Share-Link
+                            <input id="share-link" class="control-element" readonly>
+                        </label>
+                        <div class="modal-actions">
+                            <button id="share-copy" class="cta-button">Link kopieren</button>
+                            <button id="share-system" class="cta-button">Teilen...</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="qr-box">
+                            <img id="share-qr" alt="QR-Code" />
+                        </div>
+                        <small class="muted">QR-Code aktualisiert sich mit den Optionen.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
     <script src="script.js"></script>
 </body>
 </html>
