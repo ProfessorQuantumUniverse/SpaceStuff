@@ -1,168 +1,227 @@
-/* Globale Stile und Variablen */
+/* =======================================
+   Quantum Neon UI v2
+   - Aurora + Stars + Scanlines
+   - Glassmorphism + Neon Borders
+   - 3D Card Hover + Fulfilled Ribbon
+   - Animated Gradient Buttons + Ripple
+   - Priority Badges + Skeleton Loading
+   - A11y + Reduced Motion + Responsive
+   ======================================= */
+
+/* ---------- Global Variables ---------- */
 :root {
+    /* Fonts */
     --primary-font: 'Orbitron', sans-serif;
     --secondary-font: 'Share Tech Mono', monospace;
+
+    /* Base Palette */
     --text-color: #e0e6f1;
-    --accent-color: #00dffc; /* Cyan */
-    --background-color: #0c0a18;
-    --card-background: rgba(28, 25, 52, 0.6);
+    --muted-text: #a9a9a9;
+    --background-color: #0b0a14;
+
+    /* Accents + Neons */
+    --accent-color: #00dffc;     /* Cyan core */
+    --neon-1: #00dffc;           /* Cyan */
+    --neon-2: #9b00ff;           /* Purple */
+    --neon-3: #ff4dff;           /* Pink */
+    --danger-color: #ff4d4d;     /* Red */
+
+    /* Surfaces */
+    --glass-bg: rgba(26, 22, 56, 0.58);
+    --glass-stroke: rgba(0, 223, 252, 0.35);
+    --card-background: rgba(40, 37, 78, 0.66);
+
+    /* Borders + Shadows */
     --border-color: rgba(0, 223, 252, 0.4);
     --shadow-color: rgba(0, 223, 252, 0.5);
-    --danger-color: #ff4d4d;
 
-    /* Neue Neon-/Aurora-Variablen */
-    --neon-1: #00dffc;
-    --neon-2: #9b00ff;
-    --neon-3: #ff4dff;
+    /* Gradients */
     --neon-gradient: linear-gradient(115deg, var(--neon-1), var(--neon-2), var(--neon-3), var(--neon-1));
-    --glass-bg: rgba(32, 28, 66, 0.55);
-    --glass-stroke: rgba(0, 223, 252, 0.35);
+    --badge-gradient: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0));
+
+    /* Effects */
+    --blur-level: 12px;
+    --radius: 12px;
+
+    /* Animation Timings */
+    --fast: 150ms;
+    --base: 300ms;
+    --slow: 800ms;
+
+    /* Easing */
+    --ease-out: cubic-bezier(.15,.75,.25,1);
+    --ease-in: cubic-bezier(.6,.05,.9,.15);
+    --spring: cubic-bezier(.16,1,.3,1);
+
+    /* Priority Colors */
+    --priority-5: #ff4d4d;
+    --priority-4: #ff9a4d;
+    --priority-3: #e8d655;
+    --priority-2: #55d6e8;
+    --priority-1: #a9a9a9;
+
+    /* Scanline/Noise */
+    --scanline: rgba(255,255,255,0.03);
 }
 
+/* ---------- Resets ---------- */
 *,
 *::before,
-*::after {
-    box-sizing: border-box;
-}
+*::after { box-sizing: border-box; }
 
-html {
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-}
-
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
-    background-color: var(--background-color);
+    margin: 0;
     color: var(--text-color);
     font-family: var(--secondary-font);
-    margin: 0;
+    background: var(--background-color);
     line-height: 1.6;
-    overflow-x: hidden; /* vermeidet horizontales Scrollen auf kleinen Screens */
+    overflow-x: hidden;
 }
 
-/* Kosmischer Hintergrund mit Aurora & Twinkle */
+img { max-width: 100%; display: block; }
+
+/* ---------- Cosmic Background ---------- */
 #cosmic-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+    position: fixed; inset: 0;
+    z-index: -3; overflow: hidden;
     background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-    overflow: hidden;
 }
 #cosmic-background::before,
 #cosmic-background::after {
     content: "";
-    position: absolute;
-    inset: -10%;
+    position: absolute; inset: -10%;
     pointer-events: none;
 }
 
-/* Twinkle-Sterne (sparsam, performant) */
+/* Stars + Twinkle */
 #cosmic-background::before {
     background:
-        radial-gradient(1.2px 1.2px at 20% 10%, rgba(255,255,255,0.8) 50%, transparent 51%),
-        radial-gradient(1px 1px at 40% 30%, rgba(255,255,255,0.6) 50%, transparent 51%),
-        radial-gradient(1.5px 1.5px at 60% 70%, rgba(255,255,255,0.7) 50%, transparent 51%),
-        radial-gradient(2px 2px at 80% 20%, rgba(255,255,255,0.85) 50%, transparent 51%),
-        radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.5) 50%, transparent 51%),
-        radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.7) 50%, transparent 51%);
+      radial-gradient(1.6px 1.6px at 20% 10%, rgba(255,255,255,0.9) 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 40% 30%, rgba(255,255,255,0.65) 50%, transparent 51%),
+      radial-gradient(1.8px 1.8px at 60% 70%, rgba(255,255,255,0.75) 50%, transparent 51%),
+      radial-gradient(2.2px 2.2px at 80% 20%, rgba(255,255,255,0.95) 50%, transparent 51%),
+      radial-gradient(1.1px 1.1px at 10% 80%, rgba(255,255,255,0.55) 50%, transparent 51%),
+      radial-gradient(1.3px 1.3px at 90% 60%, rgba(255,255,255,0.75) 50%, transparent 51%);
     background-repeat: no-repeat;
-    animation: twinkle 8s ease-in-out infinite alternate;
-    opacity: 0.8;
     filter: drop-shadow(0 0 6px rgba(255,255,255,0.35));
+    animation: twinkle 10s ease-in-out infinite alternate;
+    opacity: .9;
 }
 
-/* Aurora/Neon-Nebel */
+/* Aurora */
 #cosmic-background::after {
     background: conic-gradient(
         from 180deg at 50% 50%,
-        rgba(0,223,252,0.06),
-        rgba(155,0,255,0.06),
-        rgba(255,77,255,0.07),
-        rgba(0,223,252,0.06)
+        rgba(0,223,252,0.07),
+        rgba(155,0,255,0.07),
+        rgba(255,77,255,0.08),
+        rgba(0,223,252,0.07)
     );
-    filter: blur(55px) saturate(1.15);
-    animation: aurora 60s linear infinite;
+    filter: blur(60px) saturate(1.2);
     mix-blend-mode: screen;
+    transform-origin: 50% 60%;
+    animation: aurora 60s linear infinite;
 }
 
-/* Container und Layout */
+/* Subtle scanlines + grain overlay */
+body::before {
+    content: "";
+    position: fixed; inset: 0; z-index: -2;
+    background:
+      repeating-linear-gradient(transparent 0 2px, var(--scanline) 2px 3px),
+      radial-gradient(1000px 600px at 10% 5%, rgba(255,255,255,0.03), transparent 65%),
+      radial-gradient(900px 500px at 90% 100%, rgba(255,255,255,0.025), transparent 70%);
+    opacity: .35;
+    pointer-events: none;
+    mix-blend-mode: soft-light;
+}
+
+/* ---------- Layout ---------- */
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem; /* mobiler: weniger Rand */
+    padding: 1rem;
     position: relative;
     z-index: 1;
 }
 
+/* ---------- Header ---------- */
 header {
     text-align: center;
     margin-bottom: 2rem;
-    animation: fadeInDown 1s ease-out;
+    animation: fadeInDown var(--slow) var(--ease-out);
 }
-
-/* Neon-Verlaufstitel mit Schimmer */
 header h1 {
     font-family: var(--primary-font);
-    font-size: clamp(1.6rem, 5vw, 2.5rem);
+    font-size: clamp(1.6rem, 5vw, 2.6rem);
+    letter-spacing: 2px;
     background: var(--neon-gradient);
     background-size: 300% 300%;
-    -webkit-background-clip: text;
-    background-clip: text;
+    -webkit-background-clip: text; background-clip: text;
     color: transparent;
-    animation: hueShift 12s linear infinite;
-    letter-spacing: 2px;
     text-shadow:
         0 0 6px rgba(0, 223, 252, 0.5),
         0 0 18px rgba(155, 0, 255, 0.25);
+    animation: hueShift 12s linear infinite;
+}
+header p {
+    color: #cbd3e4;
+    margin-top: .2rem;
+    opacity: .9;
 }
 
-/* Buttons und Steuerelemente */
+/* ---------- Buttons / Controls ---------- */
 .cta-button, .control-element {
-    background-color: transparent;
+    background: rgba(255,255,255,0.02);
     border: 1px solid var(--border-color);
     color: var(--accent-color);
-    padding: 14px 18px; /* etwas größere Touch-Ziele */
     font-family: var(--secondary-font);
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
-    text-decoration: none;
+    padding: 14px 18px;
     display: inline-block;
-    margin: 5px;
-    touch-action: manipulation; /* bessere Touch-Reaktionszeit */
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 10px;
     position: relative;
     overflow: hidden;
-    border-radius: 8px;
+    transition: transform var(--fast) var(--spring),
+                box-shadow var(--base) var(--ease-out),
+                background var(--base) var(--ease-out),
+                border-color var(--base) var(--ease-out);
+    margin: 5px;
+    touch-action: manipulation;
 }
 
-/* Shine-Sweep auf Hover */
+/* Animated shine sweep */
 .cta-button::after {
     content: "";
     position: absolute;
-    top: 0;
-    left: -150%;
-    width: 50%;
-    height: 100%;
+    top: 0; left: -150%;
+    width: 50%; height: 100%;
     background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
     transform: skewX(-20deg);
-    transition: transform 0.5s, left 0.5s;
+    transition: left .6s var(--ease-out), transform .6s var(--ease-out);
     pointer-events: none;
 }
-.cta-button:hover::after {
-    left: 150%;
-}
+.cta-button:hover::after { left: 150%; }
 
-.cta-button:hover, .control-element:hover {
-    background-color: rgba(0, 223, 252, 0.1);
+/* Neon ring hover */
+.cta-button:hover,
+.control-element:hover {
+    background: rgba(0, 223, 252, 0.08);
     box-shadow:
-        0 0 15px var(--shadow-color),
-        0 0 30px rgba(155, 0, 255, 0.25);
+        0 14px 34px rgba(0,0,0,0.35),
+        0 0 18px rgba(0, 223, 252, 0.25),
+        0 0 26px rgba(155, 0, 255, 0.15);
     transform: translateY(-1px);
 }
 
+/* Ripple pulse on active */
 .cta-button:active {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.99);
+    background:
+      radial-gradient(600px circle at center, rgba(0,223,252,0.12), transparent 40%),
+      rgba(255,255,255,0.02);
 }
 
 .cta-button:focus-visible,
@@ -173,6 +232,7 @@ header h1 {
         0 0 0 6px rgba(155, 0, 255, 0.25);
 }
 
+/* Button variants */
 .cta-button.danger {
     color: var(--danger-color);
     border-color: rgba(255, 77, 77, 0.4);
@@ -181,59 +241,72 @@ header h1 {
     background-color: rgba(255, 77, 77, 0.1);
     box-shadow: 0 0 15px rgba(255, 77, 77, 0.5);
 }
-
 .cta-button.neutral {
-    color: #aaa;
+    color: #bbb;
     border-color: rgba(170, 170, 170, 0.4);
 }
 .cta-button.neutral:hover {
-     background-color: rgba(170, 170, 170, 0.1);
-     box-shadow: 0 0 15px rgba(170, 170, 170, 0.5);
+    background-color: rgba(170, 170, 170, 0.1);
+    box-shadow: 0 0 15px rgba(170, 170, 170, 0.5);
 }
 
+/* Forms */
 input, textarea, select {
     width: 100%;
-    box-sizing: border-box;
     font-size: 1rem;
-    border-radius: 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: rgba(255,255,255,0.02);
+    color: var(--text-color);
+    padding: 12px 14px;
+    transition: border-color var(--base) var(--ease-out), background var(--base) var(--ease-out);
+}
+input::placeholder, textarea::placeholder { color: #8aa1b8; }
+input:focus, textarea:focus, select:focus {
+    background: rgba(0, 223, 252, 0.07);
+    border-color: rgba(0, 223, 252, 0.55);
 }
 
-/* Wunschlisten-Anzeige */
-.wishlist {
-    margin-bottom: 2rem;
-    border: 1px solid var(--glass-stroke);
-    padding: 1rem; /* mobiler: etwas kompakter */
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px) saturate(1.2);
-    border-radius: 12px;
-    animation: fadeInUp 1s ease-out;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Subtiler Neonrand */
-.wishlist::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(0,223,252,0.55), rgba(155,0,255,0.35));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-.wishlist-header {
+/* ---------- Controls Bar ---------- */
+.controls {
     display: flex;
-    flex-direction: column; /* mobil: untereinander */
-    align-items: stretch;
-    gap: 0.75rem;
+    flex-direction: column;
+    gap: .5rem;
     margin-bottom: 1rem;
 }
 
+/* ---------- Wishlists ---------- */
+.wishlist {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-stroke);
+    backdrop-filter: blur(var(--blur-level)) saturate(1.2);
+    animation: fadeInUp var(--slow) var(--ease-out);
+}
+
+/* Subtle neon edge */
+.wishlist::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit; padding: 1px;
+    background: linear-gradient(135deg, rgba(0,223,252,0.55), rgba(155,0,255,0.35));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events: none; opacity: .75;
+}
+
+/* Header */
+.wishlist-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .75rem;
+    margin-bottom: 1rem;
+}
 .wishlist-header h2 {
     font-family: var(--primary-font);
     color: var(--text-color);
@@ -241,56 +314,57 @@ input, textarea, select {
     margin: 0;
     position: relative;
 }
-
-/* animierte Unterstreichung */
 .wishlist-header h2::after {
     content: "";
-    display: block;
-    height: 2px;
-    margin-top: 6px;
+    display: block; height: 2px; margin-top: 6px;
     background: var(--neon-gradient);
     background-size: 250% 250%;
     animation: hueShift 14s linear infinite;
-    border-radius: 999px;
-    opacity: 0.8;
+    border-radius: 999px; opacity: .85;
 }
 
+/* Cards layout */
 .wishlist-cards {
     display: grid;
-    grid-template-columns: 1fr; /* mobil: 1 Spalte */
+    grid-template-columns: 1fr;
     gap: 1rem;
-    perspective: 1000px; /* für 3D-Tilt */
+    perspective: 1000px;
 }
 
-/* Karten */
+/* ---------- Wish Card ---------- */
 .wish-card {
-    background: rgba(40, 37, 78, 0.66);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
-    display: flex;
-    flex-direction: column;
     position: relative;
+    display: flex; flex-direction: column;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform var(--base) var(--spring),
+                box-shadow var(--base) var(--ease-out),
+                filter var(--base) var(--ease-out);
     will-change: transform;
-    box-shadow:
-        0 0 0 rgba(0,0,0,0),
-        0 0 0 rgba(0,0,0,0);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
 }
 
-/* Neon-Border als Overlay */
+/* Neon border glow overlay */
 .wish-card::before {
     content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
+    position: absolute; inset: 0;
+    border-radius: inherit; padding: 1px;
     background: linear-gradient(135deg, rgba(0,223,252,0.5), rgba(155,0,255,0.35));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.3s;
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: 0; transition: opacity var(--base) var(--ease-out);
+    pointer-events: none;
+}
+
+/* Light reflection sheen */
+.wish-card::after {
+    content: "";
+    position: absolute; inset: 0 -30% 0 0;
+    background: linear-gradient(110deg, rgba(255,255,255,0.08), transparent 40% 100%);
+    transform: translateX(-10%) skewX(-12deg);
+    opacity: 0; transition: opacity var(--base) var(--ease-out), transform var(--base) var(--ease-out);
     pointer-events: none;
 }
 
@@ -298,230 +372,193 @@ input, textarea, select {
     transform: translateY(-6px) rotateX(1.2deg) rotateY(-1.2deg);
     box-shadow:
         0 18px 40px rgba(0,0,0,0.35),
-        0 0 22px rgba(0, 223, 252, 0.25),
-        0 0 36px rgba(155, 0, 255, 0.15);
+        0 0 22px rgba(0, 223, 252, 0.22),
+        0 0 36px rgba(155, 0, 255, 0.14);
     filter: saturate(1.08);
 }
-.wish-card:hover::before {
-    opacity: 0.9;
+.wish-card:hover::before { opacity: .95; }
+.wish-card:hover::after  { opacity: .35; transform: translateX(0) skewX(-10deg); }
+
+.wish-card:focus-within {
+    outline: 2px solid transparent;
+    box-shadow:
+        0 0 0 2px rgba(0, 223, 252, 0.5),
+        0 0 0 8px rgba(155, 0, 255, 0.25);
 }
 
+/* Fulfilled state with ribbon */
+.wish-card.fulfilled {
+    filter: grayscale(.35) brightness(.92);
+    position: relative;
+}
+.wish-card.fulfilled::before { opacity: .4; }
+.wish-card.fulfilled .wish-card-image { opacity: .9; }
+.wish-card.fulfilled .wish-card-content { opacity: .95; }
+.wish-card.fulfilled .wish-card-content::before {
+    content: "Erfüllt";
+    position: absolute; top: 12px; right: -40px; z-index: 2;
+    transform: rotate(35deg);
+    background: linear-gradient(135deg, rgba(85, 214, 232, 0.9), rgba(0, 223, 252, 0.5));
+    color: #041015;
+    font-weight: 700; letter-spacing: .5px;
+    padding: .25rem 2.25rem;
+    border: 1px solid rgba(0,223,252,0.6);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.25);
+    box-shadow: 0 6px 18px rgba(0,223,252,0.25);
+    border-radius: 6px;
+}
+
+/* Card inner */
 .wish-card-image {
-    width: 100%;
-    aspect-ratio: 16 / 9; /* responsive Bildhöhe */
-    height: auto;
-    object-fit: cover;
-    background-color: #1c1934;
+    width: 100%; aspect-ratio: 16 / 9; height: auto;
+    object-fit: cover; background-color: #1c1934;
 }
-
 .wish-card-content {
-    padding: 0.9rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+    padding: .9rem; flex-grow: 1; display: flex; flex-direction: column; position: relative;
 }
-
 .wish-card h3 {
     font-family: var(--primary-font);
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 .5rem 0;
     color: var(--accent-color);
     font-size: clamp(1rem, 3.5vw, 1.2rem);
     text-shadow: 0 0 8px rgba(0,223,252,0.3);
 }
-
 .wish-card-meta {
-    display: flex;
-    flex-direction: column; /* mobil: untereinander */
-    gap: 0.25rem;
-    font-size: 0.95rem;
-    margin-bottom: 0.8rem;
-    color: #a9a9a9;
+    display: flex; flex-direction: column; gap: .25rem;
+    font-size: .95rem; margin-bottom: .8rem; color: var(--muted-text);
     word-break: break-word;
 }
 
-.priority-5 { color: #ff4d4d; font-weight: bold; text-shadow: 0 0 8px rgba(255,77,77,0.3); }
-.priority-4 { color: #ff9a4d; }
-.priority-3 { color: #e8d655; }
-.priority-2 { color: #55d6e8; }
-.priority-1 { color: #a9a9a9; }
+/* Priority badges */
+.priority-5, .priority-4, .priority-3, .priority-2, .priority-1 {
+    display: inline-flex; align-items: center; gap: .35rem;
+    padding: .2rem .5rem; border-radius: 999px;
+    background: var(--badge-gradient);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: inset 0 0 12px rgba(255,255,255,0.05);
+}
+.priority-5 { color: var(--priority-5); font-weight: 700; text-shadow: 0 0 8px rgba(255,77,77,0.3); }
+.priority-4 { color: var(--priority-4); }
+.priority-3 { color: var(--priority-3); }
+.priority-2 { color: var(--priority-2); }
+.priority-1 { color: var(--priority-1); }
 
 .wish-card-description {
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
-    flex-grow: 1;
-    overflow-wrap: anywhere; /* lange Wörter/URLs umbrechen */
-    color: #cdd5e2;
+    font-size: .95rem; margin-bottom: 1rem; flex-grow: 1;
+    overflow-wrap: anywhere; color: #cdd5e2;
 }
+.wish-card-footer { margin-top: auto; }
 
-.wish-card-footer {
-    margin-top: auto;
-}
-
-/* Controls-Bereich (z.B. Sortierung) */
-.controls {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-/* Login-Seite */
+/* ---------- Login ---------- */
 .login-container {
     max-width: 500px;
-    margin: 2.5rem auto; /* mobiler: weniger Abstand */
+    margin: 2.5rem auto;
     text-align: center;
     padding: 1.5rem;
     border: 1px solid var(--border-color);
-    background: var(--card-background);
+    background: var(--glass-bg);
     backdrop-filter: blur(10px);
-    border-radius: 12px;
+    border-radius: var(--radius);
+    box-shadow:
+        0 20px 40px rgba(0,0,0,0.35),
+        0 0 22px rgba(0, 223, 252, 0.12);
 }
 
-.error-message {
-    color: var(--danger-color);
-    margin-top: 1rem;
-    min-height: 1.2em;
-}
-
-/* Admin-Seite */
+/* ---------- Admin ---------- */
 .admin-section {
-    margin-bottom: 2rem;
-    padding: 1rem;
+    margin-bottom: 2rem; padding: 1rem;
     border: 1px solid var(--border-color);
     background: var(--card-background);
-    border-radius: 12px;
+    border-radius: var(--radius);
 }
-
 .admin-section h2 {
     font-family: var(--primary-font);
     color: var(--accent-color);
 }
-
-/* Admin-Form */
 #wish-form {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    display: grid; grid-template-columns: 1fr; gap: 1rem;
 }
+.admin-wish-list .wish-card { cursor: pointer; }
 
-.admin-wish-list .wish-card {
-    cursor: pointer;
+/* ---------- Loading / Glitch ---------- */
+.loading-indicator {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px dashed rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.02);
 }
-
-/* Animationen */
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Glitch-Effekt */
-.glitch {
-    position: relative;
-    color: var(--accent-color);
-}
+.glitch { position: relative; color: var(--accent-color); display: inline-block; }
 .glitch::before, .glitch::after {
     content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--background-color);
-    overflow: hidden;
+    position: absolute; inset: 0; background: transparent; overflow: hidden;
 }
 .glitch::before {
-    left: 2px;
-    text-shadow: -2px 0 var(--danger-color);
-    animation: glitch-anim-1 2s infinite linear alternate-reverse;
+    left: 2px; text-shadow: -2px 0 var(--danger-color);
+    animation: glitch-anim-1 2.2s infinite linear alternate-reverse;
 }
 .glitch::after {
-    left: -2px;
-    text-shadow: -2px 0 var(--accent-color);
-    animation: glitch-anim-2 2s infinite linear alternate-reverse;
+    left: -2px; text-shadow: -2px 0 var(--accent-color);
+    animation: glitch-anim-2 2.2s infinite linear alternate-reverse;
 }
 
-@keyframes glitch-anim-1 {
-    0% { clip: rect(42px, 9999px, 44px, 0); }
-    100% { clip: rect(90px, 9999px, 92px, 0); }
+/* Skeleton shimmer utility (optional class) */
+.skeleton {
+    position: relative; overflow: hidden; background: rgba(255,255,255,0.06);
 }
-@keyframes glitch-anim-2 {
-    0% { clip: rect(12px, 9999px, 14px, 0); }
-    100% { clip: rect(67px, 9999px, 69px, 0); }
-}
-
-/* Neue Hintergrundanimationen */
-@keyframes aurora {
-    0%   { transform: rotate(0deg) scale(1); }
-    50%  { transform: rotate(180deg) scale(1.05); }
-    100% { transform: rotate(360deg) scale(1); }
-}
-@keyframes twinkle {
-    0%   { opacity: 0.5; filter: drop-shadow(0 0 3px rgba(255,255,255,0.2)); }
-    50%  { opacity: 0.95; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
-    100% { opacity: 0.6; filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
-}
-@keyframes hueShift {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+.skeleton::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    animation: shimmer 1.4s infinite;
 }
 
-/* Responsives Design */
+/* ---------- Footer ---------- */
+footer { text-align: center; opacity: .8; margin-top: 1.5rem; }
+
+/* ---------- Scrollbar ---------- */
+:root { scrollbar-color: rgba(0,223,252,0.6) rgba(9,10,15,0.7); scrollbar-width: thin; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: rgba(9,10,15,0.7); }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(0,223,252,0.7), rgba(155,0,255,0.6));
+    border-radius: 10px; border: 2px solid rgba(9,10,15,0.7);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(0,223,252,0.9), rgba(155,0,255,0.8));
+}
+
+/* ---------- Responsive ---------- */
 @media (min-width: 480px) {
     .wishlist-cards {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 1.25rem;
     }
     .wish-card-meta {
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 0.5rem;
+        flex-direction: row; justify-content: space-between; gap: .5rem;
     }
     .wishlist-header {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
+        flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem;
     }
     .controls {
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
+        flex-direction: row; align-items: center; justify-content: flex-start;
     }
 }
-
 @media (min-width: 768px) {
-    .container {
-        padding: 2rem;
-    }
-    #wish-form {
-        grid-template-columns: 1fr 1fr;
-    }
-    #wish-form textarea, #wish-form button {
-        grid-column: span 2;
-    }
+    .container { padding: 2rem; }
+    #wish-form { grid-template-columns: 1fr 1fr; }
+    #wish-form textarea, #wish-form button { grid-column: span 2; }
     .wishlist-cards {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Desktop: flexible Kartenbreite */
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1.5rem;
     }
 }
-
-/* Mobile: Buttons und Controls über volle Breite */
 @media (max-width: 479.98px) {
-    .cta-button,
-    .control-element {
+    .cta-button, .control-element {
         width: 100%;
-        margin-left: 0;
-        margin-right: 0;
+        margin-left: 0; margin-right: 0;
     }
 }
 
-/* Barrierefreiheit: Weniger Bewegung, wenn gewünscht */
+/* ---------- Reduced Motion ---------- */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.001ms !important;
@@ -531,23 +568,39 @@ input, textarea, select {
     }
 }
 
-/* Benutzerdefinierte Scrollbar (unterstützte Browser) */
-:root {
-    scrollbar-color: rgba(0,223,252,0.6) rgba(9,10,15,0.7);
-    scrollbar-width: thin;
+/* ---------- Keyframes ---------- */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
-::-webkit-scrollbar-track {
-    background: rgba(9,10,15,0.7);
+@keyframes hueShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(0,223,252,0.7), rgba(155,0,255,0.6));
-    border-radius: 10px;
-    border: 2px solid rgba(9,10,15,0.7);
+@keyframes aurora {
+    0%   { transform: rotate(0deg) scale(1); }
+    50%  { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
 }
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(0,223,252,0.9), rgba(155,0,255,0.8));
+@keyframes twinkle {
+    0%   { opacity: .55; filter: drop-shadow(0 0 3px rgba(255,255,255,0.2)); }
+    50%  { opacity: .98; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
+    100% { opacity: .65; filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
+}
+@keyframes glitch-anim-1 {
+    0% { clip: rect(42px, 9999px, 44px, 0); }
+    100% { clip: rect(90px, 9999px, 92px, 0); }
+}
+@keyframes glitch-anim-2 {
+    0% { clip: rect(12px, 9999px, 14px, 0); }
+    100% { clip: rect(67px, 9999px, 69px, 0); }
+}
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
