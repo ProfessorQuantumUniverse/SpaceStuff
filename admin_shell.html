@@ -25,22 +25,23 @@
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlContent, 'text/html');
 
-            // 1) Ersetze den Body-Inhalt der entschlüsselten Seite (dies entfernt ursprüngliche <script>-Tags im DOM)
-            document.body.innerHTML = doc.body.innerHTML;
-
-            // 2) Sammle alle Skripte aus der entschlüsselten Seite
+            // 1) Sammle zuerst alle Skripte aus der entschlüsselten Seite
             const scripts = Array.from(doc.querySelectorAll('script'));
+
+            // 2) Ersetze den Body-Inhalt der aktuellen Seite
+            document.body.innerHTML = doc.body.innerHTML;
 
             // 3) Führe Skripte nacheinander aus, um die Reihenfolge zu erhalten
             for (const oldScript of scripts) {
+                // Nur ausführbare Skripte berücksichtigen
+                const t = (oldScript.type || '').trim();
+                const isModule = t === 'module';
+                const isClassic = t === '' || t === 'text/javascript';
+                if (!(isModule || isClassic) && !oldScript.src) continue;
+
                 const newScript = document.createElement('script');
+                if (isModule) newScript.type = 'module';
 
-                // Kopiere Typ, falls gesetzt (z. B. type="module")
-                if (oldScript.type) {
-                    newScript.type = oldScript.type;
-                }
-
-                // Externe Skripte: lade und warte, dann erst nächstes Script
                 if (oldScript.src) {
                     newScript.src = oldScript.src;
                     // async/defer explizit deaktivieren, um Reihenfolge zu garantieren
@@ -51,18 +52,24 @@
                         document.body.appendChild(newScript);
                     });
                 } else {
-                    // Inline-Skripte:
-                    // - Für Module: unverändert einsetzen (unterstützt Top-Level await nativ)
-                    // - Für normale Skripte: in async IIFE wrappen, um Top-Level await zu ermöglichen,
-                    //   ohne den globalen Scope zu "verschmutzen".
+                    // WICHTIG: Kein Template-Literal verwenden, sonst brechen Backticks (`) im Inhalt!
+                    // Stattdessen String-Konkatenation nutzen.
                     const content = oldScript.textContent || '';
-                    if (newScript.type === 'module') {
+
+                    if (isModule) {
+                        // Module direkt ausführen (unterstützt Top‑Level await nativ)
                         newScript.textContent = content;
                     } else {
-                        newScript.textContent = `(async () => { ${content} })();`;
+                        // Klassische Skripte in async IIFE wrappen, um Top‑Level await zu ermöglichen
+                        newScript.text = ';(async function(){\n' + content + '\n})();';
                     }
-                    document.body.appendChild(newScript);
-                    // Inline-Skripte laufen synchron, kein explizites Warten notwendig
+
+                    try {
+                        document.body.appendChild(newScript);
+                    } catch (err) {
+                        console.error('Fehler beim Einfügen eines Skripts:', err);
+                        throw err;
+                    }
                 }
             }
         }
@@ -106,7 +113,7 @@
                     ["encrypt", "decrypt"]
                 );
 
-                status.textContent = "Entschlüssle Daten...";
+                status.textContent = "Entschlüssele Daten...";
                 const decrypted = await crypto.subtle.decrypt(
                     { name: "AES-GCM", iv: iv },
                     key,

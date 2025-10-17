@@ -1,6 +1,6 @@
 // Konfiguration
 // WICHTIG: Ersetze diese URL durch deine eigene Google Apps Script Web App URL
-const API_URL = 'https://script.google.com/macros/s/AKfycbwTo-adYNFp-jNQ4IBbPK-ZtTlErj_WMDFDSuUdsz94MDqnbpNYUdIVZsDDDWz4cwOtpg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzTTBKjZ3ltLoRJQADExheRmFePLMilvUdp2JOK7hIpFNffngmFGWmGPtz7ZguTnQUtEA/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
     const wishlistsContainer = document.getElementById('wishlists-container');
