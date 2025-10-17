@@ -60,8 +60,13 @@
                         // Module direkt ausführen (unterstützt Top‑Level await nativ)
                         newScript.textContent = content;
                     } else {
-                        // Klassische Skripte in async IIFE wrappen, um Top‑Level await zu ermöglichen
-                        newScript.text = ';(async function(){\n' + content + '\n})();';
+                        // Prüfen, ob der Code bereits eine IIFE ist, um doppeltes Wrappen zu vermeiden
+                        if (content.trim().startsWith(';(async function()')) {
+                            newScript.text = content;
+                        } else {
+                            // Klassische Skripte in async IIFE wrappen, um Top‑Level await zu ermöglichen
+                            newScript.text = ';(async function(){\n' + content + '\n})();';
+                        }
                     }
 
                     try {
