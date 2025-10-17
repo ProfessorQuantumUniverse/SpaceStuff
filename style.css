@@ -11,12 +11,24 @@
     --danger-color: #ff4d4d;
 }
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
 body {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: var(--secondary-font);
     margin: 0;
     line-height: 1.6;
+    overflow-x: hidden; /* vermeidet horizontales Scrollen auf kleinen Screens */
 }
 
 #cosmic-background {
@@ -34,20 +46,20 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem; /* mobiler: weniger Rand */
     position: relative;
     z-index: 1;
 }
 
 header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     animation: fadeInDown 1s ease-out;
 }
 
 header h1 {
     font-family: var(--primary-font);
-    font-size: 2.5rem;
+    font-size: clamp(1.6rem, 5vw, 2.5rem); /* skaliert mit Viewport */
     color: var(--accent-color);
     text-shadow: 0 0 10px var(--shadow-color);
     letter-spacing: 2px;
@@ -58,13 +70,14 @@ header h1 {
     background-color: transparent;
     border: 1px solid var(--border-color);
     color: var(--accent-color);
-    padding: 12px 20px;
+    padding: 14px 18px; /* etwas größere Touch-Ziele */
     font-family: var(--secondary-font);
     cursor: pointer;
     transition: background-color 0.3s, box-shadow 0.3s;
     text-decoration: none;
     display: inline-block;
     margin: 5px;
+    touch-action: manipulation; /* bessere Touch-Reaktionszeit */
 }
 
 .cta-button:hover, .control-element:hover {
@@ -99,9 +112,9 @@ input, textarea, select {
 
 /* Wunschlisten-Anzeige */
 .wishlist {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     border: 1px solid var(--border-color);
-    padding: 1.5rem;
+    padding: 1rem; /* mobiler: etwas kompakter */
     background: var(--card-background);
     backdrop-filter: blur(10px);
     border-radius: 8px;
@@ -110,24 +123,26 @@ input, textarea, select {
 
 .wishlist-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+    flex-direction: column; /* mobil: untereinander */
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .wishlist-header h2 {
     font-family: var(--primary-font);
     color: var(--text-color);
-    font-size: 1.8rem;
+    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
     margin: 0;
 }
 
 .wishlist-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: 1fr; /* mobil: 1 Spalte */
+    gap: 1rem;
 }
 
+/* Karten */
 .wish-card {
     background: rgba(40, 37, 78, 0.7);
     border: 1px solid var(--border-color);
@@ -145,13 +160,14 @@ input, textarea, select {
 
 .wish-card-image {
     width: 100%;
-    height: 180px;
+    aspect-ratio: 16 / 9; /* responsive Bildhöhe */
+    height: auto;
     object-fit: cover;
     background-color: #1c1934;
 }
 
 .wish-card-content {
-    padding: 1rem;
+    padding: 0.9rem;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -161,14 +177,17 @@ input, textarea, select {
     font-family: var(--primary-font);
     margin: 0 0 0.5rem 0;
     color: var(--accent-color);
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
 }
 
 .wish-card-meta {
     display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
+    flex-direction: column; /* mobil: untereinander */
+    gap: 0.25rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
     color: #a9a9a9;
+    word-break: break-word;
 }
 
 .priority-5 { color: #ff4d4d; font-weight: bold; }
@@ -178,21 +197,30 @@ input, textarea, select {
 .priority-1 { color: #a9a9a9; }
 
 .wish-card-description {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     margin-bottom: 1rem;
     flex-grow: 1;
+    overflow-wrap: anywhere; /* lange Wörter/URLs umbrechen */
 }
 
 .wish-card-footer {
     margin-top: auto;
 }
 
+/* Controls-Bereich (z.B. Sortierung) */
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
 /* Login-Seite */
 .login-container {
     max-width: 500px;
-    margin: 5rem auto;
+    margin: 2.5rem auto; /* mobiler: weniger Abstand */
     text-align: center;
-    padding: 2rem;
+    padding: 1.5rem;
     border: 1px solid var(--border-color);
     background: var(--card-background);
     backdrop-filter: blur(10px);
@@ -207,8 +235,8 @@ input, textarea, select {
 
 /* Admin-Seite */
 .admin-section {
-    margin-bottom: 3rem;
-    padding: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
     border: 1px solid var(--border-color);
     background: var(--card-background);
     border-radius: 8px;
@@ -240,6 +268,7 @@ input, textarea, select {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Glitch-Effekt */
 .glitch {
     position: relative;
     color: var(--accent-color);
@@ -274,12 +303,62 @@ input, textarea, select {
     100% { clip: rect(67px, 9999px, 69px, 0); }
 }
 
-/* Responsive Design */
+/* Responsives Design */
+@media (min-width: 480px) {
+    .wishlist-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.25rem;
+    }
+    .wish-card-meta {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+    .wishlist-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .controls {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+    }
+}
+
 @media (min-width: 768px) {
+    .container {
+        padding: 2rem;
+    }
     #wish-form {
         grid-template-columns: 1fr 1fr;
     }
     #wish-form textarea, #wish-form button {
         grid-column: span 2;
+    }
+    .wishlist-cards {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Desktop: flexible Kartenbreite */
+        gap: 1.5rem;
+    }
+}
+
+/* Mobile: Buttons und Controls über volle Breite */
+@media (max-width: 479.98px) {
+    .cta-button,
+    .control-element {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* Barrierefreiheit: Weniger Bewegung, wenn gewünscht */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
     }
 }
