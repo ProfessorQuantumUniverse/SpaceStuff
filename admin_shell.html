@@ -27,11 +27,9 @@
 
             // 1) Sammle zuerst alle Skripte aus der entschlüsselten Seite
             const scripts = Array.from(doc.querySelectorAll('script'));
+            const scriptsToExecute = [];
 
-            // 2) Ersetze den Body-Inhalt der aktuellen Seite
-            document.body.innerHTML = doc.body.innerHTML;
-
-            // 3) Führe Skripte nacheinander aus, um die Reihenfolge zu erhalten
+            // 2) Bereite die Skripte für die spätere Ausführung vor und entferne sie aus dem Dokument
             for (const oldScript of scripts) {
                 // Nur ausführbare Skripte berücksichtigen
                 const t = (oldScript.type || '').trim();
@@ -44,35 +42,40 @@
 
                 if (oldScript.src) {
                     newScript.src = oldScript.src;
-                    // async/defer explizit deaktivieren, um Reihenfolge zu garantieren
-                    newScript.async = false;
-                    await new Promise((resolve, reject) => {
-                        newScript.onload = resolve;
-                        newScript.onerror = reject;
-                        document.body.appendChild(newScript);
-                    });
+                    newScript.async = false; // Reihenfolge garantieren
                 } else {
-                    // WICHTIG: Kein Template-Literal verwenden, sonst brechen Backticks (`) im Inhalt!
-                    // Stattdessen String-Konkatenation nutzen.
                     const content = oldScript.textContent || '';
-
                     if (isModule) {
-                        // Module direkt ausführen (unterstützt Top‑Level await nativ)
                         newScript.textContent = content;
                     } else {
-                        // Prüfen, ob der Code bereits eine IIFE ist, um doppeltes Wrappen zu vermeiden
+                        // Wrapper hinzufügen (die Prüfung auf doppelten Wrapper behalten wir bei)
                         if (content.trim().startsWith(';(async function()')) {
                             newScript.text = content;
                         } else {
-                            // Klassische Skripte in async IIFE wrappen, um Top‑Level await zu ermöglichen
                             newScript.text = ';(async function(){\n' + content + '\n})();';
                         }
                     }
+                }
+                scriptsToExecute.push(newScript);
+                oldScript.remove(); // WICHTIG: Skript aus dem geparsten DOM entfernen
+            }
 
+            // 3) Ersetze den Body-Inhalt der aktuellen Seite (jetzt ohne Skripte)
+            document.body.innerHTML = doc.body.innerHTML;
+
+            // 4) Führe die vorbereiteten Skripte nacheinander aus
+            for (const script of scriptsToExecute) {
+                if (script.src) {
+                    await new Promise((resolve, reject) => {
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.body.appendChild(script);
+                    });
+                } else {
                     try {
-                        document.body.appendChild(newScript);
+                        document.body.appendChild(script);
                     } catch (err) {
-                        console.error('Fehler beim Einfügen eines Skripts:', err);
+                        console.error('Fehler beim Einfügen eines Skripts:', err, script.text);
                         throw err;
                     }
                 }
